@@ -19,6 +19,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { messages } from 'messages';
 import { serverConfig } from '@repo/config/server.config';
+import { commonConfig } from '@repo/config/common.config';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
@@ -315,11 +316,12 @@ export class AuthService {
     });
 
     // TODO: 프론트엔드 URL을 설정 파일에서 가져오도록 변경
-    const resetLink = `https://nihilncunia.dev/new-password?token=${resetToken}`;
+    const resetLink = `${commonConfig.appUrl}/auth/new-password?token=${resetToken}`;
 
     await this.mailerService.sendMail({
       to: user.emlAddr,
-      subject: messages.auth.resetPasswordEmailSubject,
+      subject: messages.auth
+        .resetPasswordEmailSubject(commonConfig.appName),
       text: messages.auth.resetPasswordEmailText(resetLink),
     });
   }

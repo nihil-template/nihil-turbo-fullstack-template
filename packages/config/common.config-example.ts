@@ -11,4 +11,7 @@ export const commonConfig = {
 
   // 애플리케이션 버전 (예: '1.0.0', '2.1.3' 등)
   appVersion: '1.0.0',
+
+  // 애플리케이션 URL (예: 'https://nihilncunia.dev', 'https://my-app.com' 등)
+  appUrl: '사이트 주소',
 }; 
