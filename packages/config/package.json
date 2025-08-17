@@ -1,0 +1,22 @@
+{
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "exports": {
+    "./web.config": "./dist/web.config.js",
+    "./server.config": "./dist/server.config.js",
+    "./common.config": "./dist/common.config.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}

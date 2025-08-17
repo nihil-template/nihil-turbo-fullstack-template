@@ -1,0 +1,11 @@
+{
+  "extends": "./packages/shadcn/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@repo/shadcn/*": ["./packages/shadcn/src/*"]
+    }
+  },
+  "include": ["packages/shadcn/src/**/*"],
+  "exclude": ["node_modules"]
+}

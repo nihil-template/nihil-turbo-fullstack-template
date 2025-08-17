@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "lib": ["ES2022"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": false,
+    "noUncheckedIndexedAccess": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@repo/config": ["../../packages/config/server.config"],
+      "@repo/dto/*": ["../../packages/dto/dist/*"],
+      "@repo/prisma": ["../../packages/prisma/src/generated/client"],
+      "@repo/prisma/*": ["../../packages/prisma/src/generated/client/*"]
+    }
+  },
+  "include": ["src/**/*", "messages/**/*", "config.ts", "eslint.config.mjs"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@repo/dto",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./formModel": {
+      "types": "./dist/form-model/index.d.ts",
+      "default": "./dist/form-model/index.js"
+    },
+    "./DTO": {
+      "types": "./dist/data-transfer-object/index.d.ts",
+      "default": "./dist/data-transfer-object/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "preinstall": "pnpm run build",
+    "lint": "eslint . --config eslint.config.mjs --max-warnings 0",
+    "lint:fix": "eslint . --config eslint.config.mjs --fix"
+  },
+  "dependencies": {
+    "nestjs-zod": "^4.3.1",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@repo/config": "workspace:*",
+    "@repo/prisma": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
+    "eslint": "^9.33.0",
+    "globals": "^15.12.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1"
+  }
+}

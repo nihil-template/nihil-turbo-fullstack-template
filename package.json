@@ -1,0 +1,52 @@
+{
+  "name": "nihilncunia.dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "lint:root": "eslint . --config eslint.config.js",
+    "lint:root:fix": "eslint . --config eslint.config.js --fix",
+    "check-types": "turbo run check-types",
+    "db:generate": "turbo run db:generate --filter=api",
+    "db:migrate": "turbo run db:migrate --filter=api",
+    "db:studio": "turbo run db:studio --filter=api",
+    "db:push": "turbo run db:push --filter=api",
+    "db:seed": "turbo run db:seed --filter=api",
+    "dto:build": "turbo run build --filter=@repo/dto",
+    "dto:lint": "turbo run lint --filter=@repo/dto",
+    "dto:lint:fix": "turbo run lint:fix --filter=@repo/dto",
+    "prisma:build": "turbo run build --filter=@repo/prisma",
+    "prisma:lint": "turbo run lint --filter=@repo/prisma",
+    "prisma:lint:fix": "turbo run lint:fix --filter=@repo/prisma",
+    "config:build": "turbo run build --filter=@repo/config",
+    "config:lint": "turbo run lint --filter=@repo/config",
+    "config:lint:fix": "turbo run lint:fix --filter=@repo/config",
+    "packages:build": "turbo run build --filter=@repo/*",
+    "packages:lint": "turbo run lint --filter=@repo/*",
+    "packages:lint:fix": "turbo run lint:fix --filter=@repo/*"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-html": "^8.1.3",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=18"
+  }
+}

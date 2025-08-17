@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../packages/prisma/src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model UserInfo {
+  userId    String   @id @default(uuid()) @map("user_id")
+  emlAddr   String   @unique @map("eml_addr")
+  userNm    String   @unique @map("user_nm")
+  userRole  UserRole @default(USER) @map("user_role")
+  proflImg  String?  @map("profl_img")
+  userBiogp String?  @map("user_biogp")
+
+  // 상태 관리
+  actvtnYn  Boolean   @default(true) @map("actvtn_yn")
+  lastLgnDt DateTime? @map("last_lgn_dt")
+
+  // 메타데이터
+  crtDt  DateTime  @default(now()) @map("crt_dt")
+  updtDt DateTime  @updatedAt @map("updt_dt")
+  delDt  DateTime? @map("del_dt")
+
+  // 관계
+  UserCertInfo UserCertInfo?
+
+  @@index([emlAddr])
+  @@index([userNm])
+  @@map("user_info")
+}
+
+model UserCertInfo {
+  userCertId String    @id @default(uuid()) @map("user_cert_id")
+  userId     String    @unique @map("user_id")
+  user       UserInfo  @relation(fields: [userId], references: [userId])
+  encptPswd     String    @map("encpt_pswd")
+  reshToken     String?   @map("resh_token")
+  delYn         Boolean   @default(false) @map("del_yn")
+  crtDt         DateTime  @default(now()) @map("crt_dt")
+  updtDt        DateTime  @updatedAt @map("updt_dt")
+  delDt      DateTime? @map("del_dt")
+
+  @@map("user_cert_info")
+}
