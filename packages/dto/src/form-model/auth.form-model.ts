@@ -46,9 +46,35 @@ export const NewPasswordSchema = z.object({
 });
 export type NewPasswordType = z.infer<typeof NewPasswordSchema>;
 
-// 비밀번호 변경 스키마
+// 비밀번호 변경 스키마 (백엔드용)
 export const ChangePasswordSchema = z.object({
   currentPassword: z.string().min(1, '현재 비밀번호를 입력해주세요.'),
   newPassword: passwordSchema,
 });
 export type ChangePasswordType = z.infer<typeof ChangePasswordSchema>;
+
+// 비밀번호 변경 스키마 (폼용 - confirmPassword 포함)
+export const ChangePasswordFormSchema = z.object({
+  currentPassword: z.string().min(1, '현재 비밀번호를 입력해주세요.'),
+  newPassword: passwordSchema,
+  confirmPassword: z.string().min(1, '새 비밀번호 확인을 입력해주세요.'),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: '새 비밀번호가 일치하지 않습니다.',
+  path: ['confirmPassword'],
+});
+export type ChangePasswordFormType = z.infer<typeof ChangePasswordFormSchema>;
+
+// 회원 탈퇴 스키마 (백엔드용)
+export const WithdrawSchema = z.object({
+  password: z.string().min(1, '비밀번호를 입력해주세요.'),
+});
+export type WithdrawType = z.infer<typeof WithdrawSchema>;
+
+// 회원 탈퇴 스키마 (폼용 - confirmText 포함)
+export const WithdrawFormSchema = z.object({
+  password: z.string().min(1, '비밀번호를 입력해주세요.'),
+  confirmText: z.string().refine((val) => val === '회원탈퇴', {
+    message: '정확히 "회원탈퇴"를 입력해주세요',
+  }),
+});
+export type WithdrawFormType = z.infer<typeof WithdrawFormSchema>;

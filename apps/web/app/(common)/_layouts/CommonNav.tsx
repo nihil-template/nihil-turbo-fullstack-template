@@ -4,6 +4,8 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import React from 'react';
 
+import { Button } from '@/(common)/_components/ui/button';
+import { useGetSession } from '@/_entities/auth/hooks';
 import { cn } from '@/_libs';
 
 interface Props
@@ -12,20 +14,46 @@ interface Props
   className?: string;
 }
 
-const cssVariants = cva([ '', ], {
+const cssVariants = cva([
+  'border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
+], {
   variants: {},
   defaultVariants: {},
   compoundVariants: [],
 });
 
 export function CommonNav({ className, ...props }: Props) {
+  const { session, isPending, } = useGetSession();
+
+  if (isPending) {
+    return null;
+  }
+
   return (
     <nav className={cn(cssVariants({}), className)} {...props}>
-      <ul>
-        <li>
-          <Link href='/'>홈</Link>
-        </li>
-      </ul>
+      <div className='container mx-auto px-4 md:px-6'>
+        <div className='flex h-12 items-center justify-between'>
+          <div className='flex items-center gap-6'>
+            <Link href='/'>
+              <Button variant='ghost' size='sm'>
+                홈
+              </Button>
+            </Link>
+
+            {session && (
+              <Link href='/profile'>
+                <Button variant='ghost' size='sm'>
+                  마이페이지
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          <div className='flex items-center gap-2'>
+            {/* 추가 네비게이션 아이템들이 들어갈 수 있는 공간 */}
+          </div>
+        </div>
+      </div>
     </nav>
   );
 }

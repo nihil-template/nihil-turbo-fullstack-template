@@ -2,7 +2,7 @@ import { authKeys } from '@/_entities/auth/auth.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks';
 
-interface UseWithdrawOptions extends MutationOptionsType<null, void> {}
+interface UseWithdrawOptions extends MutationOptionsType<null, { password: string }> {}
 
 /**
  * 회원탈퇴를 위한 커스텀 훅
@@ -21,9 +21,9 @@ interface UseWithdrawOptions extends MutationOptionsType<null, void> {}
  *   }
  * });
  *
- * const handleWithdraw = async () => {
+ * const handleWithdraw = async (password: string) => {
  *   try {
- *     await withdraw.mutateAsync();
+ *     await withdraw.mutateAsync({ password });
  *     // 회원탈퇴 성공 처리
  *   } catch (error) {
  *     // 에러 처리
@@ -32,7 +32,7 @@ interface UseWithdrawOptions extends MutationOptionsType<null, void> {}
  * ```
  */
 export function useWithdraw(options: UseWithdrawOptions = {}) {
-  const query = usePost<null, void>({
+  const query = usePost<null, { password: string }>({
     url: [ 'auth', 'withdraw', ],
     key: authKeys.withdraw(),
     options,

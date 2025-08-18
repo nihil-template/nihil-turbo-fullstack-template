@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SignInSchema, type SignInType } from '@repo/dto/formModel';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -35,6 +36,9 @@ const cssVariants = cva(
 
 export function SignInForm({ className, ...props }: Props) {
   const { setAuthCardHeader, } = useAuthActions();
+
+  const router = useRouter();
+
   const { mutate: signIn, isPending, } = useSignIn({
     onSuccess: () => {
       toast.success(
@@ -42,6 +46,8 @@ export function SignInForm({ className, ...props }: Props) {
         {
           style: getToastStyle('success'),
         });
+
+      router.push('/');
     },
     onError: (error) => {
       toast.error(

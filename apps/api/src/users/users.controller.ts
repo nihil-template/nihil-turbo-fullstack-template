@@ -1,8 +1,11 @@
 import { UsersService } from '@/users/users.service';
-import { Controller, Get, Param, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, HttpCode, HttpStatus, UseGuards, Put, Body, Req } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { UpdateProfileDto } from '@repo/dto/DTO';
+import type { Request } from 'express';
+import { JwtPayload } from '@/auth/jwt.strategy';
 
 @ApiTags('users')
 @Controller('users')
@@ -63,5 +66,29 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async getUserByEmail(@Param('emlAddr') emlAddr: string) {
     return this.usersService.getUserByEmail(emlAddr);
+  }
+
+  /**
+   * 내 프로필 정보 수정
+   * @param req 요청 객체
+   * @param updateProfileData 프로필 수정 데이터
+   * @returns 프로필 수정 결과
+   */
+  @ApiOperation({
+    summary: '내 프로필 정보 수정',
+    description: '현재 로그인된 사용자의 프로필 정보를 수정합니다.',
+  })
+  @ApiResponse({ status: 200, description: '프로필 수정 성공', })
+  @ApiResponse({ status: 400, description: '잘못된 요청 데이터', })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자', })
+  @Throttle({ default: { limit: 10, ttl: 60000, }, })
+  @UseGuards(JwtAuthGuard)
+  @Put('profile')
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @Req() req: Request & { user: JwtPayload },
+    @Body() updateProfileData: UpdateProfileDto
+  ) {
+    return this.usersService.updateProfile(req.user.userId, updateProfileData);
   }
 }

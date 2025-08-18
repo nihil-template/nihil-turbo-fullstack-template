@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodValidationPipe, patchNestJsSwagger } from 'nestjs-zod';
 import { SuccessInterceptor } from './success.interceptor';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { serverConfig } from '@repo/config/server.config';
@@ -18,6 +18,9 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
+
+  // NestJS Swagger 패치 적용
+  patchNestJsSwagger();
 
   // 글로벌 파이프 설정
   app.useGlobalPipes(

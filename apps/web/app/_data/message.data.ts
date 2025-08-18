@@ -16,6 +16,7 @@ export const messageData = {
     signInSuccess: '로그인되었습니다.',
     signInError: '로그인 중 오류가 발생했습니다.',
     signOutSuccess: '로그아웃되었습니다.',
+    signOutError: '로그아웃 중 오류가 발생했습니다.',
     forgotPasswordSuccess: '비밀번호 재설정 링크가 이메일로 전송되었습니다.',
     forgotPasswordError: '비밀번호 재설정 요청 중 오류가 발생했습니다.',
     passwordChangeSuccess: '비밀번호가 변경되었습니다.',

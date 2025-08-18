@@ -8,6 +8,7 @@ import {
   ForgotPasswordSchema,
   NewPasswordSchema,
   ChangePasswordSchema,
+  WithdrawSchema,
 } from '../form-model/auth.form-model';
 
 // 회원가입 DTO용 스키마 (passwordConfirm 제외)
@@ -92,4 +93,13 @@ export class ChangePasswordDto extends createZodDto(ChangePasswordSchema) {
     example: 'NewPassword123!',
   })
   declare newPassword: string;
+}
+
+// 회원 탈퇴 DTO
+export class WithdrawDto extends createZodDto(WithdrawSchema) {
+  @ApiProperty({
+    description: '현재 비밀번호',
+    example: 'CurrentPassword123!',
+  })
+  declare password: string;
 }
