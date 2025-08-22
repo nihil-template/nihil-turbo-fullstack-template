@@ -1,12 +1,12 @@
 import type { UserInfo } from '@repo/prisma';
 
 import type { MutationOptionsType } from '@/_entities/common/common.types';
-import { usePut } from '@/_entities/common/hooks';
+import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { usersKeys } from '@/_entities/users/users.keys';
 import type { UpdateProfileData } from '@/_entities/users/users.types';
 
 interface UseUpdateProfileOptions
-  extends MutationOptionsType<UserInfo, { id: string; data: UpdateProfileData }> {}
+  extends MutationOptionsType<UserInfo, UpdateProfileData> { }
 
 /**
  * 사용자 프로필 정보 수정을 위한 커스텀 훅
@@ -25,9 +25,9 @@ interface UseUpdateProfileOptions
  *   }
  * });
  *
- * const handleUpdateProfile = async (id: string, profileData: UpdateProfileData) => {
+ * const handleUpdateProfile = async (profileData: UpdateProfileData) => {
  *   try {
- *     await updateProfile.mutateAsync({ id, data: profileData });
+ *     await updateProfile.mutateAsync(profileData);
  *     // 성공 처리
  *   } catch (error) {
  *     // 에러 처리
@@ -36,11 +36,16 @@ interface UseUpdateProfileOptions
  * ```
  */
 export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
-  const query = usePut<UserInfo, { id: string; data: UpdateProfileData }>({
+  return usePut<UserInfo, UpdateProfileData>({
     url: [ 'users', 'profile', ],
     key: usersKeys.profile(),
-    options,
+    options: {
+      onSuccess: (data, variables, context) => {
+        // 프로필 업데이트 성공 시 관련 쿼리 무효화
+        options.onSuccess?.(data, variables, context);
+      },
+      onError: options.onError,
+      ...options,
+    },
   });
-
-  return query;
 }

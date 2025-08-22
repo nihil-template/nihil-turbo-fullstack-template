@@ -26,12 +26,37 @@
     "config:lint:fix": "turbo run lint:fix --filter=@repo/config",
     "packages:build": "turbo run build --filter=@repo/*",
     "packages:lint": "turbo run lint --filter=@repo/*",
-    "packages:lint:fix": "turbo run lint:fix --filter=@repo/*"
+    "packages:lint:fix": "turbo run lint:fix --filter=@repo/*",
+    "nextx": "nextx",
+    "web:add": "pnpm add --filter web",
+    "web:add-dev": "pnpm add -D --filter web",
+    "web:remove": "pnpm remove --filter web",
+    "web:list": "pnpm list --filter web",
+    "web:dev": "pnpm dev --filter web",
+    "web:build": "pnpm build --filter web",
+    "api:add": "pnpm add --filter api",
+    "api:add-dev": "pnpm add -D --filter api",
+    "api:remove": "pnpm remove --filter api",
+    "api:list": "pnpm list --filter api",
+    "api:dev": "pnpm dev --filter api",
+    "api:build": "pnpm build --filter api",
+    "web:update": "pnpm update --filter web",
+    "api:update": "pnpm update --filter api",
+    "apps:update": "pnpm update --filter \"apps/*\"",
+    "packages:update": "pnpm update --filter \"packages/*\"",
+    "all:update": "pnpm update --filter \"apps/*\" --filter \"packages/*\"",
+    "web:ncu": "ncu --packageFile apps/web/package.json",
+    "web:ncu:update": "ncu --packageFile apps/web/package.json -u && pnpm install --filter web",
+    "api:ncu": "ncu --packageFile apps/api/package.json",
+    "api:ncu:update": "ncu --packageFile apps/api/package.json -u && pnpm install --filter api",
+    "apps:ncu": "ncu --packageFile apps/web/package.json && ncu --packageFile apps/api/package.json",
+    "apps:ncu:update": "ncu --packageFile apps/web/package.json -u && ncu --packageFile apps/api/package.json -u && pnpm install --filter \"apps/*\""
   },
   "devDependencies": {
+    "@nihilncunia/nextx": "^1.0.1",
     "@stylistic/eslint-plugin": "^5.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.39.1",
-    "@typescript-eslint/parser": "^8.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-html": "^8.1.3",
@@ -45,12 +70,12 @@
     "turbo": "^2.5.6",
     "typescript": "5.9.2"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "nestjs-zod": "^4.3.1",
+    "nestjs-zod": "^5.0.0",
     "zod": "^4.0.17"
   }
 }

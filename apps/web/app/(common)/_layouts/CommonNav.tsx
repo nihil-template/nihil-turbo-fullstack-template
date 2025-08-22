@@ -39,6 +39,11 @@ export function CommonNav({ className, ...props }: Props) {
                 홈
               </Button>
             </Link>
+            <Link href='/users'>
+              <Button variant='ghost' size='sm'>
+                사용자 목록
+              </Button>
+            </Link>
 
             {session && (
               <Link href='/profile'>

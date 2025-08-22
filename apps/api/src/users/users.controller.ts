@@ -21,7 +21,6 @@ export class UsersController {
     description: '모든 사용자 목록을 조회합니다.',
   })
   @ApiResponse({ status: 200, description: '사용자 목록 조회 성공', })
-  @Throttle({ default: { limit: 20, ttl: 60000, }, })
   @Get()
   @HttpCode(HttpStatus.OK)
   async getUsers() {
@@ -40,8 +39,6 @@ export class UsersController {
   @ApiResponse({ status: 200, description: '사용자 정보 조회 성공', })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자', })
   @ApiResponse({ status: 404, description: '사용자를 찾을 수 없음', })
-  @UseGuards(JwtAuthGuard)
-  @Throttle({ default: { limit: 20, ttl: 60000, }, })
   @Get(':userId')
   @HttpCode(HttpStatus.OK)
   async getUserById(@Param('userId') userId: string) {
@@ -60,8 +57,6 @@ export class UsersController {
   @ApiResponse({ status: 200, description: '사용자 정보 조회 성공', })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자', })
   @ApiResponse({ status: 404, description: '사용자를 찾을 수 없음', })
-  @UseGuards(JwtAuthGuard)
-  @Throttle({ default: { limit: 20, ttl: 60000, }, })
   @Get('email/:emlAddr')
   @HttpCode(HttpStatus.OK)
   async getUserByEmail(@Param('emlAddr') emlAddr: string) {

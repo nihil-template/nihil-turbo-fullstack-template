@@ -99,6 +99,7 @@ const baseConfig = [
           objectsInArrays: true,
         },
       ],
+      '@stylistic/computed-property-spacing': 'off',
       '@stylistic/object-curly-spacing': ['warn', 'always'],
       '@stylistic/object-curly-newline': [
         'error',

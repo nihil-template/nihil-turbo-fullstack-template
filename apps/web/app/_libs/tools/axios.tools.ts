@@ -1,6 +1,6 @@
+import type { SuccessPayload } from '@repo/dto/response';
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 
-import { type SuccessPayload } from '@/_entities/common/common.types';
 import { webConfig } from '@/config';
 
 /**
@@ -8,7 +8,7 @@ import { webConfig } from '@/config';
  * Axios 기반의 API 요청을 위한 헬퍼 클래스
  */
 export class Api {
-  private static baseURL = webConfig.apiRoute;
+  private static baseURL = `${webConfig.apiRoute}`;
 
   private static config: AxiosRequestConfig = {
     withCredentials: true,
@@ -23,7 +23,6 @@ export class Api {
    */
   static createInstance() {
     const instance = axios.create(this.config);
-
     return instance;
   }
 
@@ -92,11 +91,11 @@ export class Api {
     data: P,
     config?: AxiosRequestConfig
   ) {
-    return this.createInstance().put<T, AxiosResponse<SuccessPayload<T>, P>, P>(
-      restApi,
-      data,
-      config
-    );
+    return this.createInstance().put<
+      T,
+      AxiosResponse<SuccessPayload<T>, P>,
+      P
+    >(restApi, data, config);
   }
 
   /**
@@ -111,7 +110,6 @@ export class Api {
    */
   static async getQuery<D>(url: string) {
     const { data, } = await this.get<D>(url);
-
     return data;
   }
 
@@ -128,7 +126,6 @@ export class Api {
    */
   static async patchQuery<D, P>(url: string, patchData: P) {
     const { data, } = await this.patch<D, P>(url, patchData);
-
     return data;
   }
 
@@ -137,7 +134,6 @@ export class Api {
    */
   static async putQuery<D, P>(url: string, putData: P) {
     const { data, } = await this.put<D, P>(url, putData);
-
     return data;
   }
 
@@ -146,7 +142,6 @@ export class Api {
    */
   static async deleteQuery<D>(url: string) {
     const { data, } = await this.delete<D>(url);
-
     return data;
   }
 
@@ -157,7 +152,6 @@ export class Api {
     const { data, } = await this.delete<D>(url, {
       data: postData,
     });
-
     return data;
   }
 
@@ -168,7 +162,6 @@ export class Api {
     const { data, } = await this.delete<D>(url, {
       data: deleteData,
     });
-
     return data;
   }
 }

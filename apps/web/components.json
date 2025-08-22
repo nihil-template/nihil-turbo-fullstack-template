@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "@/_styles/tailwind.css",
+    "css": "app/_styles/tailwind.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
