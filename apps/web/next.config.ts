@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
   compiler: {
     styledComponents: true,
   },
-  transpilePackages: [ '@repo/shadcn', ],
+  transpilePackages: [ '@repo/shadcn', '@repo/message', ],
   eslint: {
     dirs: [],
     ignoreDuringBuilds: true,

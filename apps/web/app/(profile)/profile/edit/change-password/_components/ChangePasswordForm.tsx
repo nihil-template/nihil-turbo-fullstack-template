@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangePasswordFormSchema, ChangePasswordFormType } from '@repo/dto/formModel';
+import { messages } from '@repo/message';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import React from 'react';
@@ -12,7 +13,6 @@ import { Button } from '@/(common)/_components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/(common)/_components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/(common)/_components/ui/form';
 import { Input } from '@/(common)/_components/ui/input';
-import { messageData } from '@/_data/message.data';
 import { useChangePassword } from '@/_entities/auth/hooks';
 import { cn, getToastStyle } from '@/_libs';
 
@@ -33,13 +33,13 @@ const cssVariants = cva([
 export function ChangePasswordForm({ className, ...props }: Props) {
   const { mutate: changePassword, isPending, } = useChangePassword({
     onSuccess: () => {
-      toast.success('비밀번호가 성공적으로 변경되었습니다.', {
+      toast.success(messages.auth.passwordChangeSuccess, {
         style: getToastStyle('success'),
       });
     },
     onError: (error) => {
       toast.error(
-        error.response?.data?.message || '비밀번호 변경에 실패했습니다.',
+        error.response?.data?.message || messages.auth.passwordChangeError,
         {
           style: getToastStyle('error'),
         }

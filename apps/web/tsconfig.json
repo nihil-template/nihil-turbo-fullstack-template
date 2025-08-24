@@ -36,6 +36,8 @@
       "@/*": ["./app/*"],
       "@repo/config/*": ["../../packages/config/*"],
       "@repo/dto/*": ["../../packages/dto/dist/*"],
+      "@repo/message": ["../../packages/message/dist/index.js"],
+      "@repo/message/*": ["../../packages/message/dist/*"],
       "@repo/prisma": ["../../packages/prisma/src/generated/client"],
       "@repo/prisma/*": ["../../packages/prisma/src/generated/client/*"]
     },

@@ -10,6 +10,7 @@ export const usersKeys = createQueryKeys('users', {
   profile: () => [ 'profile', ], // 내 정보 조회
   users: (params: GetUsersParams) => [ 'users', params, ], // 사용자 목록 조회
   user: (userId: string) => [ 'user', userId, ], // 특정 사용자 조회
+  userByEmail: (emlAddr: string) => [ 'userByEmail', emlAddr, ], // 이메일로 사용자 조회
 
   // ===== PUT Mutations =====
   updateProfile: () => [ 'updateProfile', ], // 내 정보 수정

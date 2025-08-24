@@ -22,6 +22,10 @@ import { serverConfig } from '@repo/config/server.config';
         host: serverConfig.nodemailer.host,
         port: serverConfig.nodemailer.port,
         secure: serverConfig.nodemailer.secure,
+        requireTLS: true,
+        tls: {
+          minVersion: 'TLSv1.2',
+        },
         auth: {
           user: serverConfig.nodemailer.auth.user,
           pass: serverConfig.nodemailer.auth.pass,
@@ -40,4 +44,4 @@ import { serverConfig } from '@repo/config/server.config';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

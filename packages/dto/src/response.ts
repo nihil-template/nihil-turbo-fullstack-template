@@ -1,5 +1,6 @@
 export type SuccessPayload<T> = {
   status: number;
+  message: string;
   data: T;
 };
 

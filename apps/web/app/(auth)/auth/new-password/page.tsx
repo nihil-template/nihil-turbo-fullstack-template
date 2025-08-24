@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
+import { Loading } from '@/(common)/_components';
 import { setMeta } from '@/_libs';
 
 import { NewPasswordForm } from './_components';
@@ -11,6 +12,8 @@ export const metadata = setMeta({
 
 export default function NewPasswordPage() {
   return (
-    <NewPasswordForm />
+    <Suspense fallback={<Loading text='로딩 중...' />}>
+      <NewPasswordForm />
+    </Suspense>
   );
 }

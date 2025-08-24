@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewPasswordSchema } from '@repo/dto/formModel';
+import { messages } from '@repo/message';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -13,7 +14,6 @@ import { z } from 'zod';
 import { FormInput } from '@/(common)/_components/form/FormInput';
 import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
 import { Form } from '@/(common)/_components/ui/form';
-import { messageData } from '@/_data/message.data';
 import { useAuthActions } from '@/_entities/auth/auth.store';
 import { useNewPassword } from '@/_entities/auth/hooks';
 import { cn, getToastStyle } from '@/_libs';
@@ -51,14 +51,14 @@ export function NewPasswordForm({ className, ...props }: Props) {
   const { mutate: setNewPassword, isPending, } = useNewPassword({
     onSuccess: () => {
       toast.success(
-        messageData.auth.passwordChangeSuccess,
+        messages.auth.passwordChangeSuccess,
         {
           style: getToastStyle('success'),
         });
     },
     onError: (error) => {
       toast.error(
-        error.response?.data?.message || messageData.auth.passwordChangeError,
+        error.response?.data?.message || messages.auth.passwordChangeError,
         {
           style: getToastStyle('error'),
         });

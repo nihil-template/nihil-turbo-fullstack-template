@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ForgotPasswordSchema, type ForgotPasswordType } from '@repo/dto/formModel';
+import { messages } from '@repo/message';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
@@ -11,7 +12,6 @@ import { toast } from 'sonner';
 import { FormInput } from '@/(common)/_components/form/FormInput';
 import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
 import { Form } from '@/(common)/_components/ui/form';
-import { messageData } from '@/_data/message.data';
 import { useAuthActions } from '@/_entities/auth/auth.store';
 import { useForgotPassword } from '@/_entities/auth/hooks';
 import { cn, getToastStyle } from '@/_libs';
@@ -38,14 +38,14 @@ export function ForgotPasswordForm({ className, ...props }: Props) {
   const { mutate: forgotPassword, isPending, } = useForgotPassword({
     onSuccess: () => {
       toast.success(
-        messageData.auth.forgotPasswordSuccess,
+        messages.auth.forgotPasswordSuccess,
         {
           style: getToastStyle('success'),
         });
     },
     onError: (error) => {
       toast.error(
-        error.response?.data?.message || messageData.auth.forgotPasswordError,
+        error.response?.data?.message || messages.auth.forgotPasswordError,
         {
           style: getToastStyle('error'),
         });

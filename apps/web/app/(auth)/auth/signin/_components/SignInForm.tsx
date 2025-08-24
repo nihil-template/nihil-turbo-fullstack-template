@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignInSchema, type SignInType } from '@repo/dto/formModel';
+import { messages } from '@repo/message';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -12,7 +13,6 @@ import { toast } from 'sonner';
 import { FormInput } from '@/(common)/_components/form/FormInput';
 import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
 import { Form } from '@/(common)/_components/ui/form';
-import { messageData } from '@/_data/message.data';
 import { useAuthActions } from '@/_entities/auth/auth.store';
 import { useSignIn } from '@/_entities/auth/hooks';
 import { cn, getToastStyle } from '@/_libs';
@@ -42,7 +42,7 @@ export function SignInForm({ className, ...props }: Props) {
   const { mutate: signIn, isPending, } = useSignIn({
     onSuccess: () => {
       toast.success(
-        messageData.auth.signInSuccess,
+        messages.auth.signInSuccess,
         {
           style: getToastStyle('success'),
         });
@@ -51,7 +51,7 @@ export function SignInForm({ className, ...props }: Props) {
     },
     onError: (error) => {
       toast.error(
-        error.response?.data?.message || messageData.auth.signInError,
+        error.response?.data?.message || messages.auth.signInError,
         {
           style: getToastStyle('error'),
         });

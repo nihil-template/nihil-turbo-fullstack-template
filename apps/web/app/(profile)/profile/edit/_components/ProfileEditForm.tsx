@@ -76,10 +76,7 @@ export function ProfileEditForm({ className, ...props }: Props) {
     if (session) {
       // API는 userNm만 받으므로 emlAddr은 제외
       updateProfile({
-        id: session.userId,
-        data: {
-          userNm: data.userNm,
-        },
+        userNm: data.userNm,
       });
     }
   };

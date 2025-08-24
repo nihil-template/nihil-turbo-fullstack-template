@@ -1,5 +1,7 @@
 import type { UserInfo } from '@repo/prisma';
+import { useQueryClient } from '@tanstack/react-query';
 
+import { authKeys } from '@/_entities/auth/auth.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { usersKeys } from '@/_entities/users/users.keys';
@@ -36,12 +38,21 @@ interface UseUpdateProfileOptions
  * ```
  */
 export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
+  const queryClient = useQueryClient();
+
   return usePut<UserInfo, UpdateProfileData>({
     url: [ 'users', 'profile', ],
     key: usersKeys.profile(),
     options: {
       onSuccess: (data, variables, context) => {
         // 프로필 업데이트 성공 시 관련 쿼리 무효화
+        // 세션 정보도 함께 무효화하여 UI가 즉시 업데이트되도록 함
+        queryClient.invalidateQueries({
+          queryKey: authKeys.session().queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: usersKeys.profile().queryKey,
+        });
         options.onSuccess?.(data, variables, context);
       },
       onError: options.onError,

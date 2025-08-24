@@ -6,3 +6,4 @@ export { useWithdraw } from './useWithdraw';
 export { useForgotPassword } from './useForgotPassword';
 export { useNewPassword } from './useNewPassword';
 export { useChangePassword } from './useChangePassword';
+export { useRefreshToken } from './useRefreshToken';

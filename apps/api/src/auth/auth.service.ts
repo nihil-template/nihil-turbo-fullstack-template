@@ -17,7 +17,7 @@ import {
 } from '@repo/dto/DTO';
 
 import * as bcrypt from 'bcrypt';
-import { messages } from 'messages';
+import { messages } from '@repo/message';
 import { serverConfig } from '@repo/config/server.config';
 import { commonConfig } from '@repo/config/common.config';
 
@@ -41,7 +41,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService
-  ) {}
+  ) { }
 
   /**
    * 회원가입
@@ -316,14 +316,31 @@ export class AuthService {
     });
 
     // TODO: 프론트엔드 URL을 설정 파일에서 가져오도록 변경
-    const resetLink = `${commonConfig.appUrl}/auth/new-password?token=${resetToken}`;
+    const appBaseUrl = /^https?:\/\//.test(commonConfig.appUrl)
+      ? commonConfig.appUrl
+      : 'http://localhost:3000';
 
-    await this.mailerService.sendMail({
-      to: user.emlAddr,
-      subject: messages.auth
-        .resetPasswordEmailSubject(commonConfig.appName),
-      text: messages.auth.resetPasswordEmailText(resetLink),
-    });
+    const resetLink = `${appBaseUrl.replace(/\/$/, '')}/auth/new-password?token=${resetToken}`;
+
+    try {
+      await this.mailerService.sendMail({
+        to: user.emlAddr,
+        from: `"No Reply" <${serverConfig.nodemailer.auth.user}>`,
+        subject: messages.auth.resetPasswordEmailSubject(commonConfig.appName),
+        text: messages.auth.resetPasswordEmailText(resetLink),
+        html: messages.auth.resetPasswordEmailHtml(commonConfig.appName, resetLink),
+      });
+    }
+    catch (error: unknown) {
+      // 메일 전송 실패는 치명적 오류로 간주하지 않고 서버 로그에만 기록
+      // 필요 시 Sentry 등으로 전송 가능
+      if (error instanceof Error) {
+        console.error('메일 전송 실패:', { message: error.message, stack: error.stack, });
+      }
+      else {
+        console.error('메일 전송 실패:', error);
+      }
+    }
   }
 
   /**

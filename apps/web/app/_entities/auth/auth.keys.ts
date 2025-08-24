@@ -28,4 +28,5 @@ export const authKeys = createQueryKeys('auth', {
   forgotPassword: () => [ 'forgotPassword', ],
   newPassword: () => [ 'newPassword', ],
   changePassword: () => [ 'changePassword', ],
+  refresh: () => [ 'refresh', ],
 });

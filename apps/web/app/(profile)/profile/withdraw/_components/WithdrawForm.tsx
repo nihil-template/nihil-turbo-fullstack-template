@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { WithdrawFormSchema, WithdrawFormType } from '@repo/dto/formModel';
+import { messages } from '@repo/message';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -13,7 +14,6 @@ import { Button } from '@/(common)/_components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/(common)/_components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/(common)/_components/ui/form';
 import { Input } from '@/(common)/_components/ui/input';
-import { messageData } from '@/_data/message.data';
 import { useWithdraw } from '@/_entities/auth/hooks';
 import { cn, getToastStyle } from '@/_libs';
 
@@ -37,7 +37,7 @@ export function WithdrawForm({ className, ...props }: Props) {
 
   const { mutate: withdraw, isPending, } = useWithdraw({
     onSuccess: () => {
-      toast.success('회원 탈퇴가 완료되었습니다.', {
+      toast.success(messages.auth.withdrawn, {
         style: getToastStyle('success'),
       });
       router.push('/');

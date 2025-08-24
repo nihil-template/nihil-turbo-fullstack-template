@@ -1,5 +1,6 @@
 'use client';
 
+import { messages } from '@repo/message';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,7 +9,6 @@ import { toast } from 'sonner';
 
 import { Button } from '@/(common)/_components/ui/button';
 import { Skeleton } from '@/(common)/_components/ui/skeleton';
-import { messageData } from '@/_data/message.data';
 import { useGetSession, useSignOut } from '@/_entities/auth/hooks';
 import { cn, getToastStyle } from '@/_libs';
 
@@ -24,14 +24,14 @@ export function AuthButtons({ className, ...props }: Props) {
 
   const { mutate: signOut, } = useSignOut({
     onSuccess: () => {
-      toast.success(messageData.auth.signOutSuccess, {
+      toast.success(messages.auth.signOutSuccess, {
         style: getToastStyle('success'),
       });
       router.push('/');
     },
     onError: (error) => {
       toast.error(
-        error.response?.data?.message || messageData.auth.signOutError,
+        error.response?.data?.message || messages.auth.signOutError,
         {
           style: getToastStyle('error'),
         }

@@ -8,7 +8,7 @@ import { Response } from 'express';
 import { ErrorPayload } from '@repo/dto';
 import { ZodValidationException } from 'nestjs-zod';
 import { ZodError } from 'zod';
-import { messages } from 'messages';
+import { messages } from '@repo/message';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -26,10 +26,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       if (zodError instanceof ZodError && zodError.issues.length > 0) {
         // 첫 번째 에러 메시지를 사용
         const firstError = zodError.issues[ 0 ];
-        message = firstError.message || messages.users.profileValidationFailed;
+        message = firstError.message || messages.user.profileValidationFailed;
       }
       else {
-        message = messages.users.profileValidationFailed;
+        message = messages.user.profileValidationFailed;
       }
     }
     else {

@@ -19,10 +19,40 @@ export class Api {
   };
 
   /**
-   * Axios 인스턴스를 생성합니다.
+   * Axios 인스턴스를 생성하고 인터셉터를 설정합니다.
    */
   static createInstance() {
     const instance = axios.create(this.config);
+
+    // 응답 인터셉터 설정 - 401 에러 시 자동 토큰 갱신
+    instance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+
+        // 401 에러이고 아직 재시도하지 않은 경우
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            // 토큰 갱신 요청
+            await instance.post('/auth/refresh');
+            
+            // 원래 요청 재시도
+            return instance(originalRequest);
+          } catch (refreshError) {
+            // 토큰 갱신 실패 시 로그인 페이지로 리다이렉트
+            if (typeof window !== 'undefined') {
+              window.location.href = '/auth/signin';
+            }
+            return Promise.reject(refreshError);
+          }
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
     return instance;
   }
 

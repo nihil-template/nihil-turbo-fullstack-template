@@ -275,27 +275,100 @@ export type CreateUserDto = z.infer<typeof CreateUserDto>;
 
 ```typescript
 // swagger.config.ts
-import { DocumentBuilder } from '@nestjs/swagger';
-import { serverConfig } from '@repo/config/server.config';
+import { DocumentBuilder, type SwaggerCustomOptions } from '@nestjs/swagger';
 
 export const swaggerConfig = new DocumentBuilder()
-  .setTitle(serverConfig.swagger.docsName)
-  .setDescription(serverConfig.swagger.docsDescription)
-  .setVersion(serverConfig.swagger.docsVersion)
-  .addTag('auth', '인증 관련 API')
-  .addTag('users', '사용자 관련 API')
+  .setTitle('웹 애플리케이션 풀스택 API')
+  .setDescription(
+    [
+      '웹 애플리케이션 풀스택 템플릿을 위한 RESTful API 문서입니다.',
+      '',
+      '🔐 자동 인증 기능: 로그인 후 자동으로 JWT 토큰이 설정되어 별도의 인증 설정이 필요하지 않습니다.',
+      '',
+      '📌 사용 방법:',
+      '1. /auth/signin 엔드포인트로 로그인하세요',
+      '2. 로그인 성공 시 자동으로 쿠키에 토큰이 설정됩니다',
+      '3. 이후 모든 API 요청에서 자동으로 인증됩니다',
+      '',
+      '💡 Swagger UI에서는 쿠키가 자동으로 포함되어 인증된 요청을 테스트할 수 있습니다.',
+    ].join('\n'),
+  )
+  .setVersion('1.0.0')
   .addBearerAuth(
     {
       type: 'http',
       scheme: 'bearer',
       bearerFormat: 'JWT',
       name: 'JWT',
-      description: 'JWT 토큰을 입력하세요.',
+      description: '수동 JWT 토큰 입력 (선택사항 - 쿠키 인증이 우선됩니다)',
       in: 'header',
     },
     'JWT-auth',
   )
+  .addCookieAuth('accessToken', {
+    type: 'apiKey',
+    in: 'cookie',
+    name: 'accessToken',
+    description: 'HTTP-Only 쿠키를 통한 자동 JWT 인증 (로그인 시 자동 설정)',
+  })
+  .addTag('auth', '🔐 인증 관련 API - 회원가입, 로그인, 로그아웃 등')
+  .addTag('users', '👥 사용자 관리 API - 사용자 조회, 프로필 관리 등')
   .build();
+
+// Swagger UI 커스텀 옵션
+export const swaggerUiOptions: SwaggerCustomOptions = {
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    filter: true,
+    tryItOutEnabled: true,
+    withCredentials: true,
+    requestInterceptor: (req: unknown) => {
+      interface SwaggerRequest {
+        url?: string;
+        headers?: Record<string, string>;
+      }
+      const safeReq = (req as SwaggerRequest) ?? {};
+      if (
+        typeof safeReq.url === 'string' &&
+        safeReq.url.includes('/auth/signin')
+      ) {
+        if (!safeReq.headers) {
+          safeReq.headers = {};
+        }
+        safeReq.headers['x-swagger-login'] = 'true';
+      }
+      return safeReq as unknown as Record<string, unknown>;
+    },
+    responseInterceptor: `
+      (function(res) {
+        if (res.url.includes('/auth/signin') && res.status === 200) {
+          try {
+            const responseData = JSON.parse(res.text);
+            if (responseData.data && responseData.data.accessToken) {
+              window.ui.preauthorizeApiKey('JWT-auth', 'Bearer ' + responseData.data.accessToken);
+              console.log('🔐 JWT 토큰이 자동으로 설정되었습니다. 이제 인증이 필요한 API를 테스트할 수 있습니다!');
+            }
+          } catch (error) {
+            console.log('⚠️ 토큰 자동 설정 중 오류:', error);
+          }
+        }
+        return res;
+      })
+    `,
+  },
+  customfavIcon: '/favicon.ico',
+  customCss: `
+  .swagger-ui .markdown code,
+  .swagger-ui .renderedMarkdown code {
+    color: #333333 !important;
+    background-color: transparent !important;
+    font-size: 14px !important;
+    font-family: sans-serif !important;
+    font-weight: 400 !important;
+  }
+  `,
+};
 ```
 
 ### 2. 컨트롤러에서 Swagger 데코레이터 사용
@@ -305,29 +378,31 @@ export const swaggerConfig = new DocumentBuilder()
 @Controller('auth')
 export class AuthController {
   @ApiOperation({
-    summary: '로그인',
-    description: '사용자 로그인을 처리하고, 인증 토큰을 쿠키에 설정합니다.',
+    summary: '🔐 사용자 로그인',
+    description: [
+      '사용자 인증을 처리하고 JWT 토큰을 발급합니다.',
+      '',
+      '**자동 인증 기능:**',
+      '- 로그인 성공 시 HTTP-Only 쿠키에 accessToken과 refreshToken이 자동 설정됩니다',
+      '- Swagger UI에서 테스트 시 토큰이 자동으로 Authorization 헤더에 설정됩니다',
+      '- 이후 모든 API 요청에서 별도 설정 없이 자동 인증됩니다',
+    ].join('\n'),
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: '로그인 성공',
     schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 200 },
-        data: {
-          type: 'object',
-          properties: {
-            user: { $ref: '#/components/schemas/User' },
-            message: { type: 'string', example: '로그인 성공' },
-          },
-        },
+      example: {
+        status: 200,
+        data: { accessToken: '...', refreshToken: '...' },
       },
     },
   })
   @ApiResponse({
     status: 401,
     description: '인증 실패',
+    schema: {
+      example: { status: 401, message: 'Unauthorized' },
+    },
   })
   @Post('signin')
   async signIn(@Body() signInData: SignInDto) {
@@ -335,6 +410,15 @@ export class AuthController {
   }
 }
 ```
+
+### 3. Swagger 마크다운 작성 규칙
+
+- **설명 문자열 작성 방식**: 템플릿 리터럴 대신 문자열 배열을 사용하고 `join('\n')`으로 결합합니다. 들여쓰기 공백으로 인한 코드블록 렌더링을 방지합니다.
+- **목록 표기**: 마크다운 목록은 `- ` 또는 `* `를 사용합니다. `•`와 같은 특수문자는 목록으로 인식되지 않습니다.
+- **강조(굵게)**: 구역 제목은 `**제목:**` 형태로 강조합니다.
+- **숫자 목록**: `1.` 형태의 표준 마크다운을 사용합니다.
+- **코드블록 주의**: 줄 앞에 4칸 이상 공백이 있으면 코드블록으로 처리됩니다. 설명 줄의 선행 공백을 없애세요.
+- **쿠키 인증 안내**: Swagger 설정에서 `withCredentials: true`와 `.addCookieAuth('accessToken', ...)`를 함께 사용하고, 로그인 응답에서 토큰을 자동 설정하려면 `responseInterceptor`를 사용합니다.
 
 ### 3. 스키마 정의
 

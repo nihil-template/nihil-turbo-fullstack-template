@@ -10,6 +10,7 @@ interface Props
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
   VariantProps<typeof cssVariants> {
   className?: string;
+  isPending?: boolean;
 }
 
 const cssVariants = cva(
@@ -23,7 +24,7 @@ const cssVariants = cva(
   }
 );
 
-export function SubmitButton({ children, className, ...props }: Props) {
+export function SubmitButton({ children, className, isPending, ...props }: Props) {
   return (
     <Button
       type='submit'
@@ -31,6 +32,7 @@ export function SubmitButton({ children, className, ...props }: Props) {
         cssVariants({}),
         className
       )}
+      disabled={isPending}
       {...props}
     >
       {children}

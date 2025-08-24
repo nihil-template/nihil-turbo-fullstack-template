@@ -2,11 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { SuccessInterceptor } from './success.interceptor';
+import { HttpLoggingInterceptor } from './http-logging.interceptor';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { serverConfig } from '@repo/config/server.config';
 import cookieParser from 'cookie-parser';
 import { SwaggerModule } from '@nestjs/swagger';
-import { swaggerConfig } from './swagger.config';
+import { swaggerConfig, swaggerUiOptions } from './swagger.config';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +28,7 @@ async function bootstrap() {
 
   // 글로벌 인터셉터 설정
   app.useGlobalInterceptors(
+    new HttpLoggingInterceptor(),
     new SuccessInterceptor()
   );
 
@@ -41,9 +44,10 @@ async function bootstrap() {
   );
 
   SwaggerModule.setup(
-    'swagger/docs',
+    'api',
     app,
-    document
+    document,
+    swaggerUiOptions
   );
 
   await app.listen(
@@ -51,11 +55,13 @@ async function bootstrap() {
     serverConfig.host
   );
 
-  console.log(`애플리케이션이 ${serverConfig.host}:${serverConfig.port}에서 실행 중입니다.`);
+  const logger = new Logger('Bootstrap');
+  logger.log(`🚀 애플리케이션이 http://${serverConfig.host}:${serverConfig.port} 에서 실행 중입니다.`);
+  logger.log(`📚 Swagger 문서는 http://${serverConfig.host}:${serverConfig.port}/api 에서 확인 가능합니다.`);
 }
 
 const handleError = (error: Error): void => {
-  console.error('애플리케이션 시작 실패:', error.message);
+  new Logger('Bootstrap').error('❌ 애플리케이션 시작에 실패했습니다:', error.stack);
   process.exit(1);
 };
 
